@@ -792,6 +792,16 @@
                   </button>
                 )}
                 <button
+                  onClick={() => setActiveTab('answers')}
+                  className={`pb-3 px-3 transition-all border-b-2 ${
+                    activeTab === 'answers'
+                      ? 'border-pink-600 text-pink-600 font-bold'
+                      : 'border-transparent text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  📋 Respostas Registradas
+                </button>
+                <button
                   onClick={() => setActiveTab('missions')}
                   className={`pb-3 px-3 transition-all border-b-2 ${
                     activeTab === 'missions'
@@ -842,6 +852,86 @@
                   📖 Perfis
                 </button>
               </div>
+
+              {/* ABA DE RESPOSTAS REGISTRADAS */}
+              {activeTab === 'answers' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="flex flex-col sm:flex-row justify-between items-center gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div>
+                      <h4 className="font-bold text-sm text-slate-800">
+                        Histórico Completo de Respostas Marcadas
+                      </h4>
+                      <p className="text-xs text-slate-500">
+                        Confira as escolhas feitas em cada uma das 30 questões do teste.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => window.print()}
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow transition-all flex items-center gap-2 active:scale-95 shrink-0"
+                    >
+                      <span>🖨️ / 📄 Baixar Relatório em PDF</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* Lista do Primeiro Participante */}
+                    {isPerson1Completed && (
+                      <div className="border border-pink-200 rounded-2xl p-4 bg-white space-y-3">
+                        <h5 className="font-bold text-sm text-pink-700 flex items-center gap-2 border-b border-pink-100 pb-2">
+                          <span>👤</span> Respostas de {person1Name} ({rankedPerson1[0].title})
+                        </h5>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                          {QUESTIONS.map((q) => {
+                            const chosenLang = person1Answers[q.id];
+                            const chosenOption = q.optionA.lang === chosenLang ? q.optionA : q.optionB;
+                            return (
+                              <div key={`p1_q_${q.id}`} className="p-2.5 rounded-lg bg-pink-50/50 border border-pink-100">
+                                <div className="font-semibold text-slate-700 mb-1">
+                                  Questão {q.id}:
+                                </div>
+                                <div className="text-pink-950 font-medium">
+                                  ✓ "{chosenOption.text}"
+                                </div>
+                                <div className="text-[10px] text-pink-600 font-bold mt-1">
+                                  Linguagem: [{chosenLang}] {LANGUAGES_INFO[chosenLang].title}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Lista do Cônjuge */}
+                    {isPerson2Completed && (
+                      <div className="border border-purple-200 rounded-2xl p-4 bg-white space-y-3">
+                        <h5 className="font-bold text-sm text-purple-700 flex items-center gap-2 border-b border-purple-100 pb-2">
+                          <span>👩‍❤️‍👨</span> Respostas do Cônjuge ({person2Name} - {rankedPerson2[0].title})
+                        </h5>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                          {QUESTIONS.map((q) => {
+                            const chosenLang = person2Answers[q.id];
+                            const chosenOption = q.optionA.lang === chosenLang ? q.optionA : q.optionB;
+                            return (
+                              <div key={`p2_q_${q.id}`} className="p-2.5 rounded-lg bg-purple-50/50 border border-purple-100">
+                                <div className="font-semibold text-slate-700 mb-1">
+                                  Questão {q.id}:
+                                </div>
+                                <div className="text-purple-950 font-medium">
+                                  ✓ "{chosenOption.text}"
+                                </div>
+                                <div className="text-[10px] text-purple-600 font-bold mt-1">
+                                  Linguagem: [{chosenLang}] {LANGUAGES_INFO[chosenLang].title}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* ABA 0: COMPARATIVO DO CASAL */}
               {activeTab === 'comparison' && isPerson1Completed && isPerson2Completed && (
@@ -1290,12 +1380,24 @@
 
               {/* Ações de Rodapé */}
               <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row gap-3 justify-between items-center">
-                <button
-                  onClick={() => setShowResetConfirm(true)}
-                  className="w-full sm:w-auto px-4 py-2 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 text-xs font-medium transition-all"
-                >
-                  🗑️ Limpar Todos os Testes
-                </button>
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                  <button
+                    onClick={() => {
+                      setIsCompleted(false);
+                      setIsStarted(true);
+                    }}
+                    className="w-full sm:w-auto px-4 py-2 rounded-xl bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5"
+                  >
+                    <span>✍️ Voltar a Responder Questões</span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowResetConfirm(true)}
+                    className="w-full sm:w-auto px-4 py-2 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 text-xs font-medium transition-all"
+                  >
+                    🗑️ Limpar Todos os Testes
+                  </button>
+                </div>
 
                 <div className="text-xs text-slate-400">
                   Dados salvos automaticamente no navegador deste dispositivo.
@@ -1305,66 +1407,43 @@
             </div>
           )}
 
-          {/* RODAPÉ INSTITUCIONAL & CONTATOS DE TERAPIA DE CASAL - INSTITUTO INJAVI */}
-          <footer className="bg-slate-900 text-white p-6 mt-6 border-t border-slate-800 text-xs space-y-4">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              
-              {/* Marca & Logo do Instituto */}
-              <div className="flex items-center gap-3 text-center md:text-left">
-                <img 
-                  src="https://lh3.googleusercontent.com/d/1Y2T3u4v5w6x7y8z9a0b1c2d3e4f5g6h" 
-                  alt="INJAVI - Instituto Jardim da Vida" 
-                  className="w-12 h-12 rounded-xl object-cover bg-slate-800 border border-slate-700 shrink-0"
-                  onError={(e) => {
-                    e.target.src = "https://placehold.co/100x100/0f172a/38bdf8?text=INJAVI";
-                  }}
-                />
-                <div>
-                  <div className="font-bold text-sm text-sky-400 tracking-wide">
-                    INJAVI - Instituto Jardim da Vida
-                  </div>
-                  <div className="text-slate-400 text-[11px]">
-                    Atendimento e Terapia de Casal & Relações Afetivas
-                  </div>
+          {/* RODAPÉ INSTITUCIONAL & ASSINATURA */}
+          <footer className="mt-8 pt-6 border-t border-slate-200 bg-slate-50 p-6 rounded-b-2xl flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <div className="w-12 h-12 bg-indigo-900 rounded-xl flex items-center justify-center text-white font-extrabold text-xs tracking-tighter p-1 shadow">
+                INJAVI
+              </div>
+              <div className="space-y-0.5">
+                <div className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                  Instituto Jardim da Vida (INJAVI)
+                </div>
+                <div className="text-xs text-slate-600">
+                  Apoio Terapêutico e Consultoria para Casais
+                </div>
+                <div className="text-[11px] text-indigo-600 font-bold">
+                  Desenvolvido por Daniel Silva Psicanalista & Consultoria de Casal
                 </div>
               </div>
-
-              {/* Botões Automáticos de Contato com Ação Direta */}
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                
-                {/* WhatsApp Direct */}
-                <a
-                  href="https://wa.me/5511940817534?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20consulta%20de%20Terapia%20de%20Casal%20pelo%20Instituto%20INJAVI."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-all flex items-center gap-1.5 shadow-md active:scale-95 text-xs"
-                >
-                  <span>💬</span>
-                  <span>WhatsApp: (11) 94081-7534</span>
-                </a>
-
-                {/* Instagram Direct */}
-                <a
-                  href="https://instagram.com/injaviinstituto"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3.5 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg transition-all flex items-center gap-1.5 shadow-md active:scale-95 text-xs"
-                >
-                  <span>📸</span>
-                  <span>@injaviinstituto</span>
-                </a>
-
-              </div>
-
             </div>
 
-            <div className="pt-3 border-t border-slate-800 text-center text-slate-500 text-[10px] flex flex-col sm:flex-row justify-between items-center gap-2">
-              <div>
-                © {new Date().getFullYear()} INJAVI - Desenvolvido para Notebook, Android e iPhone.
-              </div>
-              <div className="text-slate-400 font-medium">
-                Desenvolvido por Daniel Silva Psicanalista & Consultoria de Casal
-              </div>
+            {/* BOTÕES DE CONTATO DIRETO */}
+            <div className="flex flex-wrap gap-2 justify-center">
+              <a
+                href="https://wa.me/5511940817534?text=Ol%C3%A1!%20Vim%20pelo%20App%20Linguagem%20de%20Amor%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20consultoria/terapia%20de%20casal."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-1.5 active:scale-95"
+              >
+                <span>💬 WhatsApp (11) 94081-7534</span>
+              </a>
+              <a
+                href="https://instagram.com/injaviinstituto"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2 bg-pink-600 hover:bg-pink-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-1.5 active:scale-95"
+              >
+                <span>📸 @injaviinstituto</span>
+              </a>
             </div>
           </footer>
 
@@ -1372,9 +1451,10 @@
       );
     }
 
-    // Renderização no container raiz
+    // Renderizar a aplicação React no container #root
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
   </script>
+
 </body>
 </html>
