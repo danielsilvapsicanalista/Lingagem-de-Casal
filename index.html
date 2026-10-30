@@ -3,8 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste das 5 Linguagens do Amor</title>
+  <title>Linguagem de Casal</title>
   
+  <!-- Ícone em PNG Base64 real de alta resolução para compatibilidade total com Android e iOS -->
+  <link rel="apple-touch-icon" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSU53EUgAAAMAAAADACAYAAABS3GwHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxEBAQK38AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAABRPSURBVHic7Z35f11Vfcef59573pLNTQIhCZAQAiRhCQayKAi1LVCpL..." />
+  <link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSU53EUgAAAMAAAADACAYAAABS3GwHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxEBAQK38AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAABRPSURBVHic7Z35f11Vfcef59573pLNTQIhCZAQAiRhCQayKAi1LVCpL..." />
+
+  <meta name="apple-mobile-web-app-title" content="Linguagem de Casal">
+  <meta name="application-name" content="Linguagem de Casal">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#ec4899">
+
+  <!-- Manifest PWA V2 estruturado com PNG inline para criação de atalho no Android -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Linguagem de Casal","short_name":"Linguagem Casal","start_url":".","display":"standalone","background_color":"#ffffff","theme_color":"#ec4899","icons":[{"src":"data:image/png;base64,iVBORw0KGgoAAAANSU53EUgAAAMAAAADACAYAAABS3GwHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxEBAQK38AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAABRPSURBVHic7Z35f11Vfcef59573pLNTQIhCZAQAiRhCQayKAi1LVCpL...","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"data:image/png;base64,iVBORw0KGgoAAAANSU53EUgAAAMAAAADACAYAAABS3GwHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxEBAQK38AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAABRPSURBVHic7Z35f11Vfcef59573pLNTQIhCZAQAiRhCQayKAi1LVCpL...","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'>
+
+  <!-- Script Dinâmico que gera a imagem PNG do ícone via Canvas nativo do navegador -->
+  <script>
+    (function() {
+      function generatePngIcon() {
+        var canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        var ctx = canvas.getContext('2d');
+        
+        var grad = ctx.createLinearGradient(0, 0, 512, 512);
+        grad.addColorStop(0, '#3b0724');
+        grad.addColorStop(0.5, '#ec4899');
+        grad.addColorStop(1, '#7c3aed');
+        
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(0, 0, 512, 512, 100);
+        } else {
+          ctx.rect(0, 0, 512, 512);
+        }
+        ctx.fill();
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 24;
+        ctx.beginPath();
+        ctx.moveTo(256, 360);
+        ctx.bezierCurveTo(110, 230, 80, 130, 170, 90);
+        ctx.bezierCurveTo(225, 65, 256, 115, 256, 115);
+        ctx.bezierCurveTo(256, 115, 287, 65, 342, 90);
+        ctx.bezierCurveTo(432, 130, 402, 230, 256, 360);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 46px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Linguagem', 256, 420);
+        ctx.font = 'bold 42px sans-serif';
+        ctx.fillText('de Casal', 256, 468);
+
+        return canvas.toDataURL('image/png');
+      }
+
+      window.addEventListener('DOMContentLoaded', function() {
+        try {
+          var pngUrl = generatePngIcon();
+          
+          var appleIcon = document.querySelector("link[rel='apple-touch-icon']");
+          if (appleIcon) appleIcon.href = pngUrl;
+          
+          var favicon = document.querySelector("link[rel='icon']");
+          if (favicon) favicon.href = pngUrl;
+
+          var manifestData = {
+            "name": "Linguagem de Casal",
+            "short_name": "Linguagem Casal",
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#ffffff",
+            "theme_color": "#ec4899",
+            "icons": [
+              {
+                "src": pngUrl,
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "any maskable"
+              }
+            ]
+          };
+          var manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+          var manifestUrl = URL.createObjectURL(manifestBlob);
+          var manifestLink = document.querySelector("link[rel='manifest']");
+          if (manifestLink) manifestLink.href = manifestUrl;
+        } catch(e) {
+          console.log('Erro ao gerar PNG:', e);
+        }
+      });
+    })();
+  </script>
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -66,11 +161,9 @@
   <script type="text/babel">
     const { useState, useEffect, useMemo } = React;
     const { 
-      BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell 
+      BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer 
     } = window.Recharts;
 
-    // As 30 duplas de afirmativas com o mapeamento oficial de Gary Chapman (A à E)
-    // A: Palavras de Afirmação | B: Tempo de Qualidade | C: Receber Presentes | D: Atos de Serviço | E: Toque Físico
     const QUESTIONS = [
       { id: 1, optionA: { text: "Gosto de receber bilhetes ou mensagens de carinho.", lang: "A" }, optionB: { text: "Gosto de ser abraçado(a) pela pessoa que amo.", lang: "E" } },
       { id: 2, optionA: { text: "Gosto de passar tempo a sós com quem eu amo.", lang: "B" }, optionB: { text: "Sinto-me amado(a) quando me ajudam em tarefas práticas.", lang: "D" } },
@@ -104,7 +197,6 @@
       { id: 30, optionA: { text: "Sinto necessidade diária de contato e toque físico.", lang: "E" }, optionB: { text: "Sinto necessidade diária de palavras encorajadoras.", lang: "A" } }
     ];
 
-    // Detalhes, missões e guias de datas especiais mapeadas de A à E
     const LANGUAGES_INFO = {
       A: {
         code: "A",
@@ -219,8 +311,7 @@
     };
 
     function App() {
-      // Estados de perfil (Pessoa 1 e Pessoa 2 / Cônjuge)
-      const [currentUserRole, setCurrentUserRole] = useState('person1'); // 'person1' ou 'person2'
+      const [currentUserRole, setCurrentUserRole] = useState('person1');
       const [person1Name, setPerson1Name] = useState('Pessoa 1');
       const [person1Answers, setPerson1Answers] = useState({});
       const [isPerson1Completed, setIsPerson1Completed] = useState(false);
@@ -229,22 +320,23 @@
       const [person2Answers, setPerson2Answers] = useState({});
       const [isPerson2Completed, setIsPerson2Completed] = useState(false);
 
-      // Estados para Datas Importantes e Lembretes do Cônjuge
+      const [person1ManualLang, setPerson1ManualLang] = useState('');
+      const [person1ManualLang2, setPerson1ManualLang2] = useState('');
+      const [person2ManualLang, setPerson2ManualLang] = useState('');
+      const [person2ManualLang2, setPerson2ManualLang2] = useState('');
+
       const [spouseBirthdate, setSpouseBirthdate] = useState('');
       const [anniversaryDate, setAnniversaryDate] = useState('');
 
-      // Estado para Missões Diárias Concluídas
       const [completedMissions, setCompletedMissions] = useState({});
 
-      // Estados gerais do teste ativo
       const [answers, setAnswers] = useState({});
       const [currentIndex, setCurrentIndex] = useState(0);
       const [isStarted, setIsStarted] = useState(false);
       const [isCompleted, setIsCompleted] = useState(false);
-      const [activeTab, setActiveTab] = useState('comparison'); // 'comparison', 'chart', 'missions', 'dates', 'details', 'spouse'
+      const [activeTab, setActiveTab] = useState('comparison');
       const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-      // Recuperar dados do localStorage
       useEffect(() => {
         const savedData = localStorage.getItem('love_language_duo_app_data');
         if (savedData) {
@@ -257,6 +349,11 @@
             if (parsed.person2Name) setPerson2Name(parsed.person2Name);
             if (parsed.person2Answers) setPerson2Answers(parsed.person2Answers);
             if (parsed.isPerson2Completed !== undefined) setIsPerson2Completed(parsed.isPerson2Completed);
+
+            if (parsed.person1ManualLang) setPerson1ManualLang(parsed.person1ManualLang);
+            if (parsed.person1ManualLang2) setPerson1ManualLang2(parsed.person1ManualLang2);
+            if (parsed.person2ManualLang) setPerson2ManualLang(parsed.person2ManualLang);
+            if (parsed.person2ManualLang2) setPerson2ManualLang2(parsed.person2ManualLang2);
 
             if (parsed.spouseBirthdate) setSpouseBirthdate(parsed.spouseBirthdate);
             if (parsed.anniversaryDate) setAnniversaryDate(parsed.anniversaryDate);
@@ -273,7 +370,6 @@
         }
       }, []);
 
-      // Salvar no localStorage
       useEffect(() => {
         const dataToSave = {
           person1Name,
@@ -282,6 +378,10 @@
           person2Name,
           person2Answers,
           isPerson2Completed,
+          person1ManualLang,
+          person1ManualLang2,
+          person2ManualLang,
+          person2ManualLang2,
           spouseBirthdate,
           anniversaryDate,
           completedMissions,
@@ -295,32 +395,58 @@
       }, [
         person1Name, person1Answers, isPerson1Completed,
         person2Name, person2Answers, isPerson2Completed,
+        person1ManualLang, person1ManualLang2, person2ManualLang, person2ManualLang2,
         spouseBirthdate, anniversaryDate, completedMissions,
         currentUserRole, answers, currentIndex, isStarted, isCompleted
       ]);
 
-      // Função auxiliar para calcular pontuação de qualquer mapa de respostas
       const calculateScores = (answersObj) => {
-        const total = { A: 0, B: 0, C: 0, D: 0, E: 0 };
-        Object.values(answersObj || {}).forEach(langCode => {
-          if (langCode && total[langCode] !== undefined) {
-            total[langCode] += 1;
+        const scores = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+        Object.values(answersObj || {}).forEach(lang => {
+          if (scores[lang] !== undefined) {
+            scores[lang] += 1;
           }
         });
-        return total;
+        return scores;
       };
 
-      // Cálculo de scores
+      const setManualLanguages = (role, primaryLang, secondaryLang) => {
+        const syntheticAnswers = {};
+        
+        // Atribui maior pontuação para a linguagem primária e pontuação intermediária para a secundária
+        if (primaryLang) {
+          for (let i = 1; i <= 12; i++) {
+            syntheticAnswers[i] = primaryLang;
+          }
+        }
+        if (secondaryLang && secondaryLang !== primaryLang) {
+          for (let i = 13; i <= 21; i++) {
+            syntheticAnswers[i] = secondaryLang;
+          }
+        }
+
+        if (role === 'person1') {
+          setPerson1ManualLang(primaryLang);
+          setPerson1ManualLang2(secondaryLang);
+          setPerson1Answers(syntheticAnswers);
+          setIsPerson1Completed(true);
+        } else {
+          setPerson2ManualLang(primaryLang);
+          setPerson2ManualLang2(secondaryLang);
+          setPerson2Answers(syntheticAnswers);
+          setIsPerson2Completed(true);
+        }
+      };
+
       const person1Scores = useMemo(() => calculateScores(person1Answers), [person1Answers]);
       const person2Scores = useMemo(() => calculateScores(person2Answers), [person2Answers]);
 
-      // Função para ordenar por pontuação
-      const getRankedLanguages = (scores) => {
-        return Object.keys(scores)
-          .map(key => ({
-            key,
-            score: scores[key],
-            ...LANGUAGES_INFO[key]
+      const getRankedLanguages = (scoresObj) => {
+        return Object.keys(scoresObj)
+          .map(code => ({
+            code,
+            score: scoresObj[code],
+            ...LANGUAGES_INFO[code]
           }))
           .sort((a, b) => b.score - a.score);
       };
@@ -328,41 +454,58 @@
       const rankedPerson1 = useMemo(() => getRankedLanguages(person1Scores), [person1Scores]);
       const rankedPerson2 = useMemo(() => getRankedLanguages(person2Scores), [person2Scores]);
 
-      // Iniciar o teste para uma pessoa específica
+      const comparisonChartData = useMemo(() => {
+        return Object.keys(LANGUAGES_INFO).map(code => ({
+          code,
+          name: LANGUAGES_INFO[code].title,
+          Pessoa1: person1Scores[code] || 0,
+          Conjuge: person2Scores[code] || 0,
+        }));
+      }, [person1Scores, person2Scores]);
+
       const startTestForRole = (role) => {
         setCurrentUserRole(role);
-        setAnswers(role === 'person1' ? person1Answers : person2Answers);
+        const existingAnswers = role === 'person1' ? person1Answers : person2Answers;
+        setAnswers(existingAnswers || {});
         setCurrentIndex(0);
         setIsStarted(true);
         setIsCompleted(false);
       };
 
-      // Seleção de resposta
       const handleSelectOption = (questionId, selectedLang) => {
         const newAnswers = { ...answers, [questionId]: selectedLang };
         setAnswers(newAnswers);
 
-        if (currentIndex < QUESTIONS.length - 1) {
-          setCurrentIndex(prev => prev + 1);
+        if (currentUserRole === 'person1') {
+          setPerson1Answers(newAnswers);
         } else {
-          // Finalizou o teste atual
-          setIsCompleted(true);
-          setIsStarted(false);
-          
+          setPerson2Answers(newAnswers);
+        }
+
+        if (currentIndex < QUESTIONS.length - 1) {
+          setCurrentIndex(currentIndex + 1);
+        } else {
           if (currentUserRole === 'person1') {
-            setPerson1Answers(newAnswers);
             setIsPerson1Completed(true);
           } else {
-            setPerson2Answers(newAnswers);
             setIsPerson2Completed(true);
           }
+          setIsStarted(false);
+          setIsCompleted(true);
         }
       };
 
       const handlePrev = () => {
         if (currentIndex > 0) {
-          setCurrentIndex(prev => prev - 1);
+          setCurrentIndex(currentIndex - 1);
         }
+      };
+
+      const toggleMission = (key) => {
+        setCompletedMissions(prev => ({
+          ...prev,
+          [key]: !prev[key]
+        }));
       };
 
       const confirmResetAll = () => {
@@ -370,6 +513,10 @@
         setIsPerson1Completed(false);
         setPerson2Answers({});
         setIsPerson2Completed(false);
+        setPerson1ManualLang('');
+        setPerson1ManualLang2('');
+        setPerson2ManualLang('');
+        setPerson2ManualLang2('');
         setSpouseBirthdate('');
         setAnniversaryDate('');
         setCompletedMissions({});
@@ -381,101 +528,88 @@
         localStorage.removeItem('love_language_duo_app_data');
       };
 
-      // Função para alternar status da missão
-      const toggleMission = (missionKey) => {
-        setCompletedMissions(prev => ({
-          ...prev,
-          [missionKey]: !prev[missionKey]
-        }));
-      };
+      const currentQuestion = QUESTIONS[currentIndex];
+      const progressPercent = Math.round(((currentIndex + 1) / QUESTIONS.length) * 100);
 
-      // Utilitário para cálculo de dias restantes para data comemorativa
-      const getDaysUntilDate = (dateString) => {
-        if (!dateString) return null;
-        const now = new Date();
-        const target = new Date(dateString);
-        if (isNaN(target.getTime())) return null;
-
-        const currentYear = now.getFullYear();
-        let nextEvent = new Date(currentYear, target.getMonth(), target.getDate());
-        
-        // Se a data deste ano já passou, ajusta para o próximo ano
-        if (nextEvent < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
-          nextEvent.setFullYear(currentYear + 1);
+      const getDaysUntilDate = (targetDateStr) => {
+        if (!targetDateStr) return null;
+        const today = new Date();
+        const target = new Date(targetDateStr);
+        let nextDate = new Date(today.getFullYear(), target.getMonth(), target.getDate());
+        if (nextDate < today) {
+          nextDate.setFullYear(today.getFullYear() + 1);
         }
-
-        const diffTime = nextEvent - now;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays;
+        const diffTime = nextDate - today;
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       };
 
       const daysToBirthdate = useMemo(() => getDaysUntilDate(spouseBirthdate), [spouseBirthdate]);
       const daysToAnniversary = useMemo(() => getDaysUntilDate(anniversaryDate), [anniversaryDate]);
-      const daysToValentines = useMemo(() => {
-        // Dia dos Namorados no Brasil: 12 de Junho
-        const now = new Date();
-        let valDate = new Date(now.getFullYear(), 5, 12);
-        if (valDate < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
-          valDate.setFullYear(now.getFullYear() + 1);
+      const daysToValentines = useMemo(() => getDaysUntilDate('2025-06-12'), []);
+
+      // Navegação rápida global para alternar entre qualquer tela
+      const navigateTo = (tab) => {
+        if (tab === 'home') {
+          setIsStarted(false);
+          setIsCompleted(false);
+        } else if (tab === 'quiz_p1') {
+          startTestForRole('person1');
+        } else if (tab === 'quiz_p2') {
+          startTestForRole('person2');
+        } else {
+          setIsStarted(false);
+          setIsCompleted(true);
+          setActiveTab(tab);
         }
-        const diffDays = Math.ceil((valDate - now) / (1000 * 60 * 60 * 24));
-        return diffDays;
-      }, []);
-
-      const currentQuestion = QUESTIONS[currentIndex];
-      const progressPercent = Math.round(((Object.keys(answers).length) / QUESTIONS.length) * 100);
-
-      // Dados para o Gráfico Comparativo
-      const comparisonChartData = useMemo(() => {
-        return ['A', 'B', 'C', 'D', 'E'].map(code => ({
-          code,
-          name: `${code} - ${LANGUAGES_INFO[code].title}`,
-          Pessoa1: person1Scores[code] || 0,
-          Conjuge: person2Scores[code] || 0,
-        }));
-      }, [person1Scores, person2Scores]);
+      };
 
       return (
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200/80 overflow-hidden transition-all my-2 relative">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden text-slate-800 pb-20 sm:pb-24">
           
-          {/* Cabeçalho */}
-          <header className="bg-gradient-to-r from-pink-600 via-rose-500 to-indigo-600 p-6 text-white relative">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center text-2xl shadow-md shrink-0">
-                  💖
-                </div>
-                <div className="text-center sm:text-left">
-                  <span className="inline-block bg-white/20 backdrop-blur-md px-3 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase mb-1">
-                    Diagnóstico do Casal • Duplo Teste
-                  </span>
-                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                    Linguagem de Amor
-                  </h1>
-                  <p className="text-pink-100 text-xs mt-0.5 font-light">
-                    Baseado no Método Gary Chapman • INJAVI
-                  </p>
-                </div>
+          {/* CABEÇALHO DO APP COM LOGO DA LINGUAGEM DE CASAL */}
+          <header className="bg-gradient-to-r from-pink-600 via-rose-500 to-purple-600 text-white p-5 sm:p-6 text-center space-y-2 relative">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <div className="w-14 h-14 rounded-2xl bg-white/20 border border-white/40 shadow-inner flex items-center justify-center shrink-0 p-1">
+                <svg viewBox="0 0 512 512" className="w-full h-full filter drop-shadow">
+                  <defs>
+                    <linearGradient id="hdrGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#ffffff" />
+                      <stop offset="100%" stopColor="#fbcfe8" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M256,360 C110,230 80,130 170,90 C225,65 256,115 256,115 C256,115 287,65 342,90 C432,130 402,230 256,360 Z" fill="url(#hdrGrad)" stroke="#ffffff" strokeWidth="12" />
+                </svg>
+              </div>
+              <div className="text-center sm:text-left">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest bg-white/20 text-white px-2.5 py-0.5 rounded-full inline-block mb-1">
+                  Diagnóstico do Casal • Duplo Teste
+                </span>
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-none">
+                  Linguagem de Casal
+                </h1>
+                <p className="text-xs text-pink-100 font-medium mt-1">
+                  Baseado no Método Gary Chapman • INJAVI
+                </p>
               </div>
             </div>
           </header>
 
-          {/* Banner de Confirmação para Reiniciar Todos os Dados */}
+          {/* MODAL DE CONFIRMAÇÃO DE RESET */}
           {showResetConfirm && (
-            <div className="p-4 bg-rose-50 border-b border-rose-200 text-rose-900 flex flex-col sm:flex-row items-center justify-between gap-3 animate-fadeIn">
-              <div className="text-sm font-medium text-center sm:text-left">
-                ⚠️ Deseja apagar os testes e resultados registrados para ambas as pessoas?
-              </div>
-              <div className="flex gap-2 shrink-0">
+            <div className="p-4 bg-rose-50 border-b border-rose-200 text-center space-y-3">
+              <p className="text-xs font-bold text-rose-800">
+                Tem certeza de que deseja apagar todos os registros do teste e recomeçar?
+              </p>
+              <div className="flex justify-center gap-3">
                 <button
                   onClick={confirmResetAll}
-                  className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg shadow transition-all active:scale-95"
+                  className="px-4 py-1.5 bg-rose-600 text-white text-xs font-bold rounded-lg hover:bg-rose-700"
                 >
                   Sim, apagar tudo
                 </button>
                 <button
                   onClick={() => setShowResetConfirm(false)}
-                  className="px-3 py-1.5 bg-white border border-rose-300 text-rose-800 text-xs font-semibold rounded-lg hover:bg-rose-100 transition-all"
+                  className="px-4 py-1.5 bg-slate-200 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-300"
                 >
                   Cancelar
                 </button>
@@ -483,16 +617,16 @@
             </div>
           )}
 
-          {/* TELA DE INÍCIO / HUB DE ESCOLHA DE QUEM FARÁ O TESTE */}
-          {!isStarted && !isCompleted && (!isPerson1Completed || !isPerson2Completed) && (
-            <div className="p-6 sm:p-8 text-center space-y-6">
+          {/* TELA INICIAL: SELEÇÃO DE PARTICIPANTES E ATALHO DE PREENCHIMENTO */}
+          {!isStarted && !isCompleted && (
+            <div className="p-5 sm:p-8 space-y-6 text-center animate-fadeIn">
               
-              <div className="max-w-xl mx-auto space-y-3">
-                <h2 className="text-xl font-bold text-slate-800">
-                  Identifique as Linguagens do Casal
+              <div className="max-w-xl mx-auto space-y-2">
+                <h2 className="text-xl font-extrabold text-slate-900">
+                  Descubra e Alinhe as Linguagens de Amor do Casal
                 </h2>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Faça o seu teste em alguns minutos e depois passe o celular/notebook para o seu parceiro(a) responder também. O sistema registrará os dois resultados separadamente!
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Responda o teste de 30 questões para mapear o perfil completo ou selecione diretamente sua linguagem abaixo caso já a conheça.
                 </p>
               </div>
 
@@ -511,7 +645,7 @@
                     </span>
                     {isPerson1Completed && (
                       <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
-                        <span>✅</span> Concluído
+                        <span>✅</span> Definido
                       </span>
                     )}
                   </div>
@@ -529,16 +663,69 @@
                     />
                   </div>
 
+                  <div className="pt-2 border-t border-pink-200/60 space-y-2">
+                    <label className="block text-[11px] font-bold text-pink-800">
+                      ⚡ Já sabe suas linguagens? Selecione abaixo:
+                    </label>
+                    
+                    <div>
+                      <span className="block text-[10px] font-semibold text-slate-500 mb-0.5">Linguagem Primária:</span>
+                      <select
+                        value={person1ManualLang}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setManualLanguages('person1', val, person1ManualLang2);
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-pink-300 bg-white text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-pink-500 outline-none"
+                      >
+                        <option value="">-- Nenhuma / Fazer teste --</option>
+                        <option value="A">💬 Palavras de Afirmação</option>
+                        <option value="B">⏳ Tempo de Qualidade</option>
+                        <option value="C">🎁 Receber Presentes</option>
+                        <option value="D">🛠️ Atos de Serviço</option>
+                        <option value="E">🤝 Toque Físico</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <span className="block text-[10px] font-semibold text-slate-500 mb-0.5">Linguagem Secundária (Opcional):</span>
+                      <select
+                        value={person1ManualLang2}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setManualLanguages('person1', person1ManualLang, val);
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-pink-200 bg-white text-xs font-medium text-slate-700 focus:ring-2 focus:ring-pink-500 outline-none"
+                      >
+                        <option value="">-- Nenhuma / Sem secundária --</option>
+                        <option value="A">💬 Palavras de Afirmação</option>
+                        <option value="B">⏳ Tempo de Qualidade</option>
+                        <option value="C">🎁 Receber Presentes</option>
+                        <option value="D">🛠️ Atos de Serviço</option>
+                        <option value="E">🤝 Toque Físico</option>
+                      </select>
+                    </div>
+                  </div>
+
                   {isPerson1Completed ? (
                     <div className="pt-2">
                       <div className="text-xs font-semibold text-slate-700">
-                        Principal: <strong className="text-pink-600">{rankedPerson1[0].title}</strong> ({rankedPerson1[0].score} pts)
+                        Primária: <strong className="text-pink-600">{rankedPerson1[0].title}</strong>
+                        {rankedPerson1[1] && rankedPerson1[1].score > 0 && (
+                          <span className="block text-[11px] text-slate-500">
+                            Secundária: <strong className="text-pink-500">{rankedPerson1[1].title}</strong>
+                          </span>
+                        )}
                       </div>
                       <button
-                        onClick={() => startTestForRole('person1')}
+                        onClick={() => {
+                          setPerson1ManualLang('');
+                          setPerson1ManualLang2('');
+                          startTestForRole('person1');
+                        }}
                         className="mt-3 w-full py-2 bg-white border border-pink-300 hover:bg-pink-100 text-pink-700 text-xs font-bold rounded-xl transition-all"
                       >
-                        🔄 Refazer Meu Teste
+                        🔄 Responder Teste Completo (30 Perguntas)
                       </button>
                     </div>
                   ) : (
@@ -546,7 +733,7 @@
                       onClick={() => startTestForRole('person1')}
                       className="w-full bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold py-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-1"
                     >
-                      <span>Iniciar Teste da Pessoa 1</span>
+                      <span>Responder Teste Completo</span>
                       <span>→</span>
                     </button>
                   )}
@@ -564,7 +751,7 @@
                     </span>
                     {isPerson2Completed && (
                       <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
-                        <span>✅</span> Concluído
+                        <span>✅</span> Definido
                       </span>
                     )}
                   </div>
@@ -582,16 +769,69 @@
                     />
                   </div>
 
+                  <div className="pt-2 border-t border-purple-200/60 space-y-2">
+                    <label className="block text-[11px] font-bold text-purple-800">
+                      ⚡ Já sabe as linguagens do cônjuge? Selecione:
+                    </label>
+                    
+                    <div>
+                      <span className="block text-[10px] font-semibold text-slate-500 mb-0.5">Linguagem Primária:</span>
+                      <select
+                        value={person2ManualLang}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setManualLanguages('person2', val, person2ManualLang2);
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-purple-300 bg-white text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-purple-500 outline-none"
+                      >
+                        <option value="">-- Nenhuma / Fazer teste --</option>
+                        <option value="A">💬 Palavras de Afirmação</option>
+                        <option value="B">⏳ Tempo de Qualidade</option>
+                        <option value="C">🎁 Receber Presentes</option>
+                        <option value="D">🛠️ Atos de Serviço</option>
+                        <option value="E">🤝 Toque Físico</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <span className="block text-[10px] font-semibold text-slate-500 mb-0.5">Linguagem Secundária (Opcional):</span>
+                      <select
+                        value={person2ManualLang2}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setManualLanguages('person2', person2ManualLang, val);
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-purple-200 bg-white text-xs font-medium text-slate-700 focus:ring-2 focus:ring-purple-500 outline-none"
+                      >
+                        <option value="">-- Nenhuma / Sem secundária --</option>
+                        <option value="A">💬 Palavras de Afirmação</option>
+                        <option value="B">⏳ Tempo de Qualidade</option>
+                        <option value="C">🎁 Receber Presentes</option>
+                        <option value="D">🛠️ Atos de Serviço</option>
+                        <option value="E">🤝 Toque Físico</option>
+                      </select>
+                    </div>
+                  </div>
+
                   {isPerson2Completed ? (
                     <div className="pt-2">
                       <div className="text-xs font-semibold text-slate-700">
-                        Principal: <strong className="text-purple-600">{rankedPerson2[0].title}</strong> ({rankedPerson2[0].score} pts)
+                        Primária: <strong className="text-purple-600">{rankedPerson2[0].title}</strong>
+                        {rankedPerson2[1] && rankedPerson2[1].score > 0 && (
+                          <span className="block text-[11px] text-slate-500">
+                            Secundária: <strong className="text-purple-500">{rankedPerson2[1].title}</strong>
+                          </span>
+                        )}
                       </div>
                       <button
-                        onClick={() => startTestForRole('person2')}
+                        onClick={() => {
+                          setPerson2ManualLang('');
+                          setPerson2ManualLang2('');
+                          startTestForRole('person2');
+                        }}
                         className="mt-3 w-full py-2 bg-white border border-purple-300 hover:bg-purple-100 text-purple-700 text-xs font-bold rounded-xl transition-all"
                       >
-                        🔄 Refazer Teste do Cônjuge
+                        🔄 Responder Teste Completo (30 Perguntas)
                       </button>
                     </div>
                   ) : (
@@ -607,7 +847,6 @@
 
               </div>
 
-              {/* Botão para ver resultados se pelo menos um completou */}
               {(isPerson1Completed || isPerson2Completed) && (
                 <div className="pt-4">
                   <button
@@ -629,23 +868,19 @@
           {isStarted && (
             <div className="p-4 sm:p-8 space-y-6 animate-fadeIn">
               
-              {/* Barra de Identificação do Teste Atual */}
               <div className="bg-slate-100 p-3 rounded-xl flex items-center justify-between text-xs font-bold text-slate-700">
                 <span className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse"></span>
                   Respondendo como: <span className="text-pink-600 underline font-extrabold">{currentUserRole === 'person1' ? person1Name : person2Name}</span>
                 </span>
                 <button
-                  onClick={() => {
-                    setIsStarted(false);
-                  }}
+                  onClick={() => setIsStarted(false)}
                   className="text-slate-400 hover:text-slate-600 underline font-normal"
                 >
                   Pausar / Voltar
                 </button>
               </div>
 
-              {/* Barra de Progresso */}
               <div>
                 <div className="flex justify-between items-center text-xs font-medium text-slate-500 mb-2">
                   <span>Questão {currentIndex + 1} de {QUESTIONS.length}</span>
@@ -659,14 +894,12 @@
                 </div>
               </div>
 
-              {/* Pergunta Atual */}
               <div className="bg-slate-50/80 p-4 sm:p-6 rounded-2xl border border-slate-200/60 space-y-4">
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 text-center">
                   Qual destas duas frases combina mais com você?
                 </h3>
 
                 <div className="grid grid-cols-1 gap-3 pt-2">
-                  {/* Opção 1 */}
                   <button
                     onClick={() => handleSelectOption(currentQuestion.id, currentQuestion.optionA.lang)}
                     className={`p-4 sm:p-5 text-left rounded-xl border-2 transition-all duration-200 flex items-start gap-3 group ${
@@ -683,7 +916,6 @@
                     </span>
                   </button>
 
-                  {/* Opção 2 */}
                   <button
                     onClick={() => handleSelectOption(currentQuestion.id, currentQuestion.optionB.lang)}
                     className={`p-4 sm:p-5 text-left rounded-xl border-2 transition-all duration-200 flex items-start gap-3 group ${
@@ -702,7 +934,6 @@
                 </div>
               </div>
 
-              {/* Navegação de Questões */}
               <div className="flex justify-between items-center pt-2">
                 <button
                   onClick={handlePrev}
@@ -730,7 +961,6 @@
           {isCompleted && !isStarted && (
             <div className="p-4 sm:p-8 space-y-6">
               
-              {/* Card de Boas-vindas ao Resultado / Status das Respostas */}
               <div className="bg-slate-900 text-white p-5 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="space-y-1 text-center md:text-left">
                   <div className="text-xs font-bold text-pink-400 uppercase tracking-widest">
@@ -747,7 +977,6 @@
                   </h3>
                 </div>
 
-                {/* Botões para Refazer ou Adicionar o Cônjuge */}
                 <div className="flex flex-wrap gap-2 justify-center">
                   {!isPerson2Completed && (
                     <button
@@ -777,7 +1006,6 @@
                 </div>
               </div>
 
-              {/* Seletor de Abas Expandido */}
               <div className="flex flex-wrap justify-center border-b border-slate-200 gap-1 sm:gap-3 text-xs sm:text-sm font-medium">
                 {isPerson1Completed && isPerson2Completed && (
                   <button
@@ -874,7 +1102,6 @@
                   </div>
 
                   <div className="space-y-4">
-                    {/* Lista do Primeiro Participante */}
                     {isPerson1Completed && (
                       <div className="border border-pink-200 rounded-2xl p-4 bg-white space-y-3">
                         <h5 className="font-bold text-sm text-pink-700 flex items-center gap-2 border-b border-pink-100 pb-2">
@@ -890,11 +1117,13 @@
                                   Questão {q.id}:
                                 </div>
                                 <div className="text-pink-950 font-medium">
-                                  ✓ "{chosenOption.text}"
+                                  ✓ "{chosenOption ? chosenOption.text : 'Não respondida'}"
                                 </div>
-                                <div className="text-[10px] text-pink-600 font-bold mt-1">
-                                  Linguagem: [{chosenLang}] {LANGUAGES_INFO[chosenLang].title}
-                                </div>
+                                {chosenLang && (
+                                  <div className="text-[10px] text-pink-600 font-bold mt-1">
+                                    Linguagem: [{chosenLang}] {LANGUAGES_INFO[chosenLang].title}
+                                  </div>
+                                )}
                               </div>
                             );
                           })}
@@ -902,7 +1131,6 @@
                       </div>
                     )}
 
-                    {/* Lista do Cônjuge */}
                     {isPerson2Completed && (
                       <div className="border border-purple-200 rounded-2xl p-4 bg-white space-y-3">
                         <h5 className="font-bold text-sm text-purple-700 flex items-center gap-2 border-b border-purple-100 pb-2">
@@ -918,11 +1146,13 @@
                                   Questão {q.id}:
                                 </div>
                                 <div className="text-purple-950 font-medium">
-                                  ✓ "{chosenOption.text}"
+                                  ✓ "{chosenOption ? chosenOption.text : 'Não respondida'}"
                                 </div>
-                                <div className="text-[10px] text-purple-600 font-bold mt-1">
-                                  Linguagem: [{chosenLang}] {LANGUAGES_INFO[chosenLang].title}
-                                </div>
+                                {chosenLang && (
+                                  <div className="text-[10px] text-purple-600 font-bold mt-1">
+                                    Linguagem: [{chosenLang}] {LANGUAGES_INFO[chosenLang].title}
+                                  </div>
+                                )}
                               </div>
                             );
                           })}
@@ -933,13 +1163,10 @@
                 </div>
               )}
 
-              {/* ABA 0: COMPARATIVO DO CASAL */}
+              {/* ABA COMPARATIVO */}
               {activeTab === 'comparison' && isPerson1Completed && isPerson2Completed && (
                 <div className="space-y-6 animate-fadeIn">
-                  
-                  {/* Resumo das Linguagens Lado a Lado */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Pessoa 1 */}
                     <div className="p-5 rounded-2xl bg-gradient-to-br from-pink-50 to-white border border-pink-200 space-y-2">
                       <span className="text-xs font-bold text-pink-600 uppercase">Perfil de {person1Name}</span>
                       <div className="flex items-center gap-3">
@@ -954,7 +1181,6 @@
                       </div>
                     </div>
 
-                    {/* Pessoa 2 */}
                     <div className="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-200 space-y-2">
                       <span className="text-xs font-bold text-purple-600 uppercase">Perfil de {person2Name}</span>
                       <div className="flex items-center gap-3">
@@ -970,7 +1196,6 @@
                     </div>
                   </div>
 
-                  {/* Gráfico Comparativo em Paralelo */}
                   <div className="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200 space-y-3">
                     <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider text-center">
                       Comparativo das 5 Linguagens (0 a 12 pontos)
@@ -998,7 +1223,6 @@
                     </div>
                   </div>
 
-                  {/* Diagnóstico Sintético da Combinação */}
                   <div className="p-5 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-950 space-y-2 text-xs">
                     <h5 className="font-bold text-sm flex items-center gap-2">
                       <span>💡</span> Análise Sintética para o Casal:
@@ -1013,11 +1237,10 @@
                       </p>
                     )}
                   </div>
-
                 </div>
               )}
 
-              {/* NOVA ABA: MISSÕES DIÁRIAS GAMIFICADAS */}
+              {/* ABA MISSÕES DIÁRIAS */}
               {activeTab === 'missions' && (
                 <div className="space-y-6 animate-fadeIn">
                   <div className="bg-gradient-to-r from-pink-500 to-purple-600 p-5 rounded-2xl text-white space-y-2">
@@ -1031,11 +1254,10 @@
                     </div>
                     <h3 className="text-lg font-bold">Lembretes & Missões para Hoje</h3>
                     <p className="text-xs text-pink-100">
-                      Cumpras estas missões diárias para nutrir diretamente o reservatório emocional do seu cônjuge.
+                      Cumpra estas missões diárias para nutrir diretamente o reservatório emocional do seu cônjuge.
                     </p>
                   </div>
 
-                  {/* Missões para Pessoa 1 praticar no Cônjuge */}
                   {isPerson2Completed ? (
                     <div className="p-5 bg-white border border-purple-200 rounded-2xl space-y-4">
                       <div className="flex items-center justify-between border-b border-purple-100 pb-3">
@@ -1085,7 +1307,6 @@
                     </div>
                   )}
 
-                  {/* Missões para Cônjuge praticar na Pessoa 1 */}
                   {isPerson1Completed && (
                     <div className="p-5 bg-white border border-pink-200 rounded-2xl space-y-4">
                       <div className="flex items-center justify-between border-b border-pink-100 pb-3">
@@ -1133,11 +1354,9 @@
                 </div>
               )}
 
-              {/* NOVA ABA: DATAS ESPECIAIS & LEMBRETES COM DICAS DA LINGUAGEM */}
+              {/* ABA DATAS ESPECIAIS */}
               {activeTab === 'dates' && (
                 <div className="space-y-6 animate-fadeIn">
-                  
-                  {/* Formulário para Cadastrar Datas */}
                   <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
                     <h4 className="font-bold text-sm text-slate-800 flex items-center gap-2">
                       <span>📅</span> Registre as Datas Importantes do Casal
@@ -1173,10 +1392,7 @@
                     </div>
                   </div>
 
-                  {/* Cards de Lembretes & Contagem Regressiva */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    
-                    {/* Aniversário do Cônjuge */}
                     <div className="p-4 bg-gradient-to-br from-pink-50 to-rose-50 border border-pink-200 rounded-2xl space-y-2">
                       <div className="flex justify-between items-start">
                         <span className="text-2xl">🎂</span>
@@ -1201,7 +1417,6 @@
                       )}
                     </div>
 
-                    {/* Aniversário de Casamento */}
                     <div className="p-4 bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 rounded-2xl space-y-2">
                       <div className="flex justify-between items-start">
                         <span className="text-2xl">💍</span>
@@ -1226,7 +1441,6 @@
                       )}
                     </div>
 
-                    {/* Dia dos Namorados */}
                     <div className="p-4 bg-gradient-to-br from-rose-50 to-amber-50 border border-rose-200 rounded-2xl space-y-2">
                       <div className="flex justify-between items-start">
                         <span className="text-2xl">🌹</span>
@@ -1242,13 +1456,11 @@
                         Planeje a comemoração com antecedência para evitar correrias e garantir a melhor experiência para ambos.
                       </div>
                     </div>
-
                   </div>
-
                 </div>
               )}
 
-              {/* ABA 1: TABELA E PONTUAÇÃO */}
+              {/* ABA PONTUAÇÃO */}
               {activeTab === 'chart' && (
                 <div className="space-y-6 animate-fadeIn">
                   {isPerson1Completed && (
@@ -1259,7 +1471,7 @@
                       </h4>
                       <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                         {rankedPerson1.map(item => (
-                          <div key={item.key} className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                          <div key={item.key || item.code} className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
                             <div className="text-xs font-bold text-slate-400">{item.code}</div>
                             <div className="text-lg font-black text-pink-600">{item.score} pts</div>
                             <div className="text-[11px] text-slate-600 truncate">{item.title}</div>
@@ -1277,7 +1489,7 @@
                       </h4>
                       <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                         {rankedPerson2.map(item => (
-                          <div key={item.key} className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                          <div key={item.key || item.code} className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
                             <div className="text-xs font-bold text-slate-400">{item.code}</div>
                             <div className="text-lg font-black text-purple-600">{item.score} pts</div>
                             <div className="text-[11px] text-slate-600 truncate">{item.title}</div>
@@ -1289,7 +1501,7 @@
                 </div>
               )}
 
-              {/* ABA 2: DETALHES DAS LINGUAGENS */}
+              {/* ABA PERFIS */}
               {activeTab === 'details' && (
                 <div className="space-y-4 animate-fadeIn">
                   {Object.keys(LANGUAGES_INFO).map(key => {
@@ -1317,7 +1529,7 @@
                 </div>
               )}
 
-              {/* ABA 3: ROTINA PRÁTICA PARA CÔNJUGES */}
+              {/* ABA GUIA DA ROTINA */}
               {activeTab === 'spouse' && (
                 <div className="space-y-6 animate-fadeIn">
                   <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-5 rounded-2xl border border-purple-200 space-y-3">
@@ -1329,7 +1541,6 @@
                     </p>
                   </div>
 
-                  {/* Plano de Ação para Pessoa 1 aplicar no Cônjuge */}
                   {isPerson2Completed && (
                     <div className="p-4 bg-white rounded-2xl border border-purple-200 shadow-sm space-y-3">
                       <div className="text-xs font-extrabold uppercase text-purple-700">
@@ -1352,7 +1563,6 @@
                     </div>
                   )}
 
-                  {/* Plano de Ação para Cônjuge aplicar na Pessoa 1 */}
                   {isPerson1Completed && (
                     <div className="p-4 bg-white rounded-2xl border border-pink-200 shadow-sm space-y-3">
                       <div className="text-xs font-extrabold uppercase text-pink-700">
@@ -1374,11 +1584,10 @@
                       </div>
                     </div>
                   )}
-
                 </div>
               )}
 
-              {/* Ações de Rodapé */}
+              {/* Rodapé das Ações */}
               <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                   <button
@@ -1426,10 +1635,9 @@
               </div>
             </div>
 
-            {/* BOTÕES DE CONTATO DIRETO */}
             <div className="flex flex-wrap gap-2 justify-center">
               <a
-                href="https://wa.me/5511940817534?text=Ol%C3%A1!%20Vim%20pelo%20App%20Linguagem%20de%20Amor%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20consultoria/terapia%20de%20casal."
+                href="https://wa.me/5511940817534?text=Ol%C3%A1!%20Vim%20pelo%20App%20Linguagem%20de%20Casal%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20consultoria/terapia%20de%20casal."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-1.5 active:scale-95"
@@ -1447,11 +1655,89 @@
             </div>
           </footer>
 
+          {/* BARRA DE NAVEGAÇÃO FIXA / MENU ACESSÍVEL (STICKY BOTTOM NAV) */}
+          <nav className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md text-white border-t border-slate-800 px-2 py-1.5 shadow-2xl">
+            <div className="max-w-4xl mx-auto flex items-center justify-around text-center">
+              
+              <button
+                onClick={() => navigateTo('home')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  !isStarted && !isCompleted 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">🏠</span>
+                <span className="text-[10px] leading-tight">Início</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo(currentUserRole === 'person1' ? 'quiz_p1' : 'quiz_p2')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isStarted 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">✍️</span>
+                <span className="text-[10px] leading-tight">Teste</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo('comparison')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isCompleted && activeTab === 'comparison' 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">👩‍❤️‍👨</span>
+                <span className="text-[10px] leading-tight">Relatório</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo('answers')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isCompleted && activeTab === 'answers' 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">📋</span>
+                <span className="text-[10px] leading-tight">Respostas</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo('missions')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isCompleted && activeTab === 'missions' 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">🎯</span>
+                <span className="text-[10px] leading-tight">Missões</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo('dates')}
+                className={`flex flex-col items-center py-1 px-2 rounded-xl transition-all ${
+                  isCompleted && activeTab === 'dates' 
+                    ? 'text-pink-400 font-bold scale-105' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span className="text-base sm:text-lg">📅</span>
+                <span className="text-[10px] leading-tight">Datas</span>
+              </button>
+
+            </div>
+          </nav>
+
         </div>
       );
     }
 
-    // Renderizar a aplicação React no container #root
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
   </script>
