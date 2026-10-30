@@ -160,9 +160,21 @@
   <!-- Código React -->
   <script type="text/babel">
     const { useState, useEffect, useMemo } = React;
-    const { 
-      BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer 
-    } = window.Recharts;
+    const { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } = window.Recharts;
+
+    // CONFIGURAÇÕES DE SEGURANÇA E VOUCHERS
+    const MASTER_KEY = "injavi.adm";
+    const GENERAL_KEY = "CASAL-VIP";
+
+    // Função utilitária para gerar/obter o ID único do dispositivo (Device Signature)
+    const getDeviceId = () => {
+      let deviceId = localStorage.getItem('device_hardware_uuid');
+      if (!deviceId) {
+        deviceId = 'DEV-' + Math.random().toString(36).substring(2, 10) + '-' + Date.now().toString(36);
+        localStorage.setItem('device_hardware_uuid', deviceId);
+      }
+      return deviceId;
+    };
 
     const QUESTIONS = [
       { id: 1, optionA: { text: "Gosto de receber bilhetes ou mensagens de carinho.", lang: "A" }, optionB: { text: "Gosto de ser abraçado(a) pela pessoa que amo.", lang: "E" } },
@@ -182,7 +194,7 @@
       { id: 15, optionA: { text: "Gosto que elogiem minhas conquistas e esforços.", lang: "A" }, optionB: { text: "Sei que me ama quando faz coisas difíceis para me aliviar.", lang: "D" } },
       { id: 16, optionA: { text: "Gosto de toques afetuosos enquanto passamos um pelo outro.", lang: "E" }, optionB: { text: "Gosto quando me escutam com atenção e empatia.", lang: "B" } },
       { id: 17, optionA: { text: "Sinto-me amado(a) quando me ajudam nas tarefas de casa.", lang: "D" }, optionB: { text: "Adoro a sensação de receber um presente pensado para mim.", lang: "C" } },
-      { id: 18, optionA: { text: "Gosto quando elogiam minha aparência e estilo.", lang: "A" }, optionB: { text: "Sinto-me amado(a) quando tiram tempo para ouvir meus sentimentos.", lang: "B" } },
+      { id: 18, optionA: { text: "Gosto quando elogiem minha aparência e estilo.", lang: "A" }, optionB: { text: "Sinto-me amado(a) quando tiram tempo para ouvir meus sentimentos.", lang: "B" } },
       { id: 19, optionA: { text: "Sinto-me seguro(a) com toques físicos frequentes.", lang: "E" }, optionB: { text: "Atos de serviço práticos me fazem sentir amado(a).", lang: "D" } },
       { id: 20, optionA: { text: "Aprecio as inúmeras pequenas coisas práticas que fazem por mim.", lang: "D" }, optionB: { text: "Aprecio receber coisas feitas à mão ou escolhidas a dedo.", lang: "C" } },
       { id: 21, optionA: { text: "Amo a sensação de ter a atenção total e sem distrações.", lang: "B" }, optionB: { text: "Amo quando realizam uma tarefa pesada por mim.", lang: "D" } },
@@ -311,6 +323,12 @@
     };
 
     function App() {
+      // Estado da Trava de Segurança / Paywall
+      const [isUnlocked, setIsUnlocked] = useState(false);
+      const [activationEmail, setActivationEmail] = useState('');
+      const [activationInput, setActivationInput] = useState('');
+      const [activationError, setActivationError] = useState('');
+
       const [currentUserRole, setCurrentUserRole] = useState('person1');
       const [person1Name, setPerson1Name] = useState('Pessoa 1');
       const [person1Answers, setPerson1Answers] = useState({});
@@ -342,6 +360,8 @@
         if (savedData) {
           try {
             const parsed = JSON.parse(savedData);
+            if (parsed.isUnlocked !== undefined) setIsUnlocked(parsed.isUnlocked);
+            if (parsed.activationEmail) setActivationEmail(parsed.activationEmail);
             if (parsed.person1Name) setPerson1Name(parsed.person1Name);
             if (parsed.person1Answers) setPerson1Answers(parsed.person1Answers);
             if (parsed.isPerson1Completed !== undefined) setIsPerson1Completed(parsed.isPerson1Completed);
@@ -372,6 +392,8 @@
 
       useEffect(() => {
         const dataToSave = {
+          isUnlocked,
+          activationEmail,
           person1Name,
           person1Answers,
           isPerson1Completed,
@@ -393,6 +415,7 @@
         };
         localStorage.setItem('love_language_duo_app_data', JSON.stringify(dataToSave));
       }, [
+        isUnlocked, activationEmail,
         person1Name, person1Answers, isPerson1Completed,
         person2Name, person2Answers, isPerson2Completed,
         person1ManualLang, person1ManualLang2, person2ManualLang, person2ManualLang2,
@@ -400,9 +423,50 @@
         currentUserRole, answers, currentIndex, isStarted, isCompleted
       ]);
 
+      const handleUnlockAttempt = (e) => {
+        e.preventDefault();
+        const emailTrimmed = activationEmail.trim().toLowerCase();
+        const codeTrimmed = activationInput.trim();
+
+        if (!emailTrimmed || !emailTrimmed.includes('@')) {
+          setActivationError('Por favor, digite um e-mail válido.');
+          return;
+        }
+
+        // Validação por Senha Mestre (Sem Restrições)
+        if (codeTrimmed === MASTER_KEY) {
+          setIsUnlocked(true);
+          setActivationError('');
+          return;
+        }
+
+        // Validação por Chave Geral de Ativação (CASAL-VIP) com Vínculo ao Dispositivo
+        if (codeTrimmed.toUpperCase() === GENERAL_KEY.toUpperCase()) {
+          const deviceId = getDeviceId();
+          const registeredOwner = localStorage.getItem('app_registered_owner_email');
+
+          if (!registeredOwner) {
+            // Primeiro cadastro neste dispositivo
+            localStorage.setItem('app_registered_owner_email', emailTrimmed);
+            localStorage.setItem('app_registered_device_id', deviceId);
+            setIsUnlocked(true);
+            setActivationError('');
+          } else if (registeredOwner === emailTrimmed) {
+            // E-mail correto registrado para este dispositivo
+            setIsUnlocked(true);
+            setActivationError('');
+          } else {
+            // E-mail diferente tentando ser ativado neste mesmo aparelho
+            setActivationError(`Este dispositivo já foi ativado com o e-mail: ${registeredOwner}. Se você é outro usuário, compre seu acesso individual.`);
+          }
+        } else {
+          setActivationError('Chave de Ativação inválida. Verifique o código e tente novamente.');
+        }
+      };
+
       const calculateScores = (answersObj) => {
         const scores = { A: 0, B: 0, C: 0, D: 0, E: 0 };
-        Object.values(answersObj || {}).forEach(lang => {
+        Object.values(answersObj).forEach(lang => {
           if (scores[lang] !== undefined) {
             scores[lang] += 1;
           }
@@ -410,66 +474,67 @@
         return scores;
       };
 
-      const setManualLanguages = (role, primaryLang, secondaryLang) => {
-        const syntheticAnswers = {};
-        
-        // Atribui maior pontuação para a linguagem primária e pontuação intermediária para a secundária
-        if (primaryLang) {
-          for (let i = 1; i <= 12; i++) {
-            syntheticAnswers[i] = primaryLang;
+      const getRankedLanguages = (answersObj, manual1, manual2) => {
+        if (manual1) {
+          const result = [
+            { code: manual1, ...LANGUAGES_INFO[manual1], score: 12 }
+          ];
+          if (manual2 && manual2 !== manual1) {
+            result.push({ code: manual2, ...LANGUAGES_INFO[manual2], score: 8 });
+          } else {
+            const keys = ['A', 'B', 'C', 'D', 'E'].filter(k => k !== manual1);
+            result.push({ code: keys[0], ...LANGUAGES_INFO[keys[0]], score: 0 });
           }
-        }
-        if (secondaryLang && secondaryLang !== primaryLang) {
-          for (let i = 13; i <= 21; i++) {
-            syntheticAnswers[i] = secondaryLang;
-          }
+          return result;
         }
 
-        if (role === 'person1') {
-          setPerson1ManualLang(primaryLang);
-          setPerson1ManualLang2(secondaryLang);
-          setPerson1Answers(syntheticAnswers);
-          setIsPerson1Completed(true);
-        } else {
-          setPerson2ManualLang(primaryLang);
-          setPerson2ManualLang2(secondaryLang);
-          setPerson2Answers(syntheticAnswers);
-          setIsPerson2Completed(true);
-        }
-      };
-
-      const person1Scores = useMemo(() => calculateScores(person1Answers), [person1Answers]);
-      const person2Scores = useMemo(() => calculateScores(person2Answers), [person2Answers]);
-
-      const getRankedLanguages = (scoresObj) => {
-        return Object.keys(scoresObj)
+        const scores = calculateScores(answersObj);
+        return Object.keys(scores)
           .map(code => ({
             code,
-            score: scoresObj[code],
+            score: scores[code],
             ...LANGUAGES_INFO[code]
           }))
           .sort((a, b) => b.score - a.score);
       };
 
-      const rankedPerson1 = useMemo(() => getRankedLanguages(person1Scores), [person1Scores]);
-      const rankedPerson2 = useMemo(() => getRankedLanguages(person2Scores), [person2Scores]);
+      const rankedPerson1 = useMemo(() => {
+        return getRankedLanguages(person1Answers, person1ManualLang, person1ManualLang2);
+      }, [person1Answers, person1ManualLang, person1ManualLang2]);
+
+      const rankedPerson2 = useMemo(() => {
+        return getRankedLanguages(person2Answers, person2ManualLang, person2ManualLang2);
+      }, [person2Answers, person2ManualLang, person2ManualLang2]);
 
       const comparisonChartData = useMemo(() => {
+        const scores1 = calculateScores(person1Answers);
+        const scores2 = calculateScores(person2Answers);
         return Object.keys(LANGUAGES_INFO).map(code => ({
           code,
           name: LANGUAGES_INFO[code].title,
-          Pessoa1: person1Scores[code] || 0,
-          Conjuge: person2Scores[code] || 0,
+          Pessoa1: person1ManualLang ? (person1ManualLang === code ? 12 : (person1ManualLang2 === code ? 8 : 0)) : (scores1[code] || 0),
+          Conjuge: person2ManualLang ? (person2ManualLang === code ? 12 : (person2ManualLang2 === code ? 8 : 0)) : (scores2[code] || 0),
         }));
-      }, [person1Scores, person2Scores]);
+      }, [person1Answers, person2Answers, person1ManualLang, person1ManualLang2, person2ManualLang, person2ManualLang2]);
 
       const startTestForRole = (role) => {
         setCurrentUserRole(role);
-        const existingAnswers = role === 'person1' ? person1Answers : person2Answers;
-        setAnswers(existingAnswers || {});
+        setAnswers(role === 'person1' ? person1Answers : person2Answers);
         setCurrentIndex(0);
         setIsStarted(true);
         setIsCompleted(false);
+      };
+
+      const setManualLanguages = (role, primary, secondary) => {
+        if (role === 'person1') {
+          setPerson1ManualLang(primary);
+          setPerson1ManualLang2(secondary);
+          if (primary) setIsPerson1Completed(true);
+        } else {
+          setPerson2ManualLang(primary);
+          setPerson2ManualLang2(secondary);
+          if (primary) setIsPerson2Completed(true);
+        }
       };
 
       const handleSelectOption = (questionId, selectedLang) => {
@@ -483,7 +548,7 @@
         }
 
         if (currentIndex < QUESTIONS.length - 1) {
-          setCurrentIndex(currentIndex + 1);
+          setCurrentIndex(prev => prev + 1);
         } else {
           if (currentUserRole === 'person1') {
             setIsPerson1Completed(true);
@@ -492,62 +557,40 @@
           }
           setIsStarted(false);
           setIsCompleted(true);
+          setActiveTab('comparison');
         }
       };
 
       const handlePrev = () => {
         if (currentIndex > 0) {
-          setCurrentIndex(currentIndex - 1);
+          setCurrentIndex(prev => prev - 1);
         }
-      };
-
-      const toggleMission = (key) => {
-        setCompletedMissions(prev => ({
-          ...prev,
-          [key]: !prev[key]
-        }));
       };
 
       const confirmResetAll = () => {
         setPerson1Answers({});
-        setIsPerson1Completed(false);
         setPerson2Answers({});
+        setIsPerson1Completed(false);
         setIsPerson2Completed(false);
         setPerson1ManualLang('');
         setPerson1ManualLang2('');
         setPerson2ManualLang('');
         setPerson2ManualLang2('');
-        setSpouseBirthdate('');
-        setAnniversaryDate('');
         setCompletedMissions({});
         setAnswers({});
         setCurrentIndex(0);
-        setIsCompleted(false);
         setIsStarted(false);
+        setIsCompleted(false);
         setShowResetConfirm(false);
-        localStorage.removeItem('love_language_duo_app_data');
       };
 
-      const currentQuestion = QUESTIONS[currentIndex];
-      const progressPercent = Math.round(((currentIndex + 1) / QUESTIONS.length) * 100);
-
-      const getDaysUntilDate = (targetDateStr) => {
-        if (!targetDateStr) return null;
-        const today = new Date();
-        const target = new Date(targetDateStr);
-        let nextDate = new Date(today.getFullYear(), target.getMonth(), target.getDate());
-        if (nextDate < today) {
-          nextDate.setFullYear(today.getFullYear() + 1);
-        }
-        const diffTime = nextDate - today;
-        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const toggleMission = (missionKey) => {
+        setCompletedMissions(prev => ({
+          ...prev,
+          [missionKey]: !prev[missionKey]
+        }));
       };
 
-      const daysToBirthdate = useMemo(() => getDaysUntilDate(spouseBirthdate), [spouseBirthdate]);
-      const daysToAnniversary = useMemo(() => getDaysUntilDate(anniversaryDate), [anniversaryDate]);
-      const daysToValentines = useMemo(() => getDaysUntilDate('2025-06-12'), []);
-
-      // Navegação rápida global para alternar entre qualquer tela
       const navigateTo = (tab) => {
         if (tab === 'home') {
           setIsStarted(false);
@@ -562,6 +605,99 @@
           setActiveTab(tab);
         }
       };
+
+      const calculateDaysRemaining = (dateString) => {
+        if (!dateString) return null;
+        const today = new Date();
+        const target = new Date(dateString);
+        target.setFullYear(today.getFullYear());
+        if (target < today) {
+          target.setFullYear(today.getFullYear() + 1);
+        }
+        const diffTime = Math.abs(target - today);
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      };
+
+      const daysToBirthdate = calculateDaysRemaining(spouseBirthdate);
+      const daysToAnniversary = calculateDaysRemaining(anniversaryDate);
+      const daysToValentines = calculateDaysRemaining(`${new Date().getFullYear()}-06-12`);
+
+      const progressPercent = Math.round(((currentIndex + 1) / QUESTIONS.length) * 100);
+      const currentQuestion = QUESTIONS[currentIndex];
+
+      // TELA DE BLOQUEIO (PAYWALL/CHAVE DE ATIVAÇÃO POR E-MAIL)
+      if (!isUnlocked) {
+        return (
+          <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden max-w-md mx-auto my-8 animate-fadeIn">
+            <div className="bg-gradient-to-r from-pink-600 to-purple-600 p-6 text-white text-center space-y-2">
+              <div className="w-16 h-16 bg-white/20 rounded-2xl mx-auto flex items-center justify-center p-2 border border-white/30">
+                <span className="text-3xl">🔒</span>
+              </div>
+              <h2 className="text-xl font-extrabold tracking-tight">Conteúdo Exclusivo</h2>
+              <p className="text-xs text-pink-100">
+                Linguagem de Casal • Mapeamento do Relacionamento
+              </p>
+            </div>
+
+            <div className="p-6 space-y-5 text-center">
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Informe o seu <strong>E-mail de Compra</strong> e a <strong>Chave de Ativação</strong> recebida na sua plataforma de vendas ou no seu atendimento do consultório.
+              </p>
+
+              <form onSubmit={handleUnlockAttempt} className="space-y-3">
+                <div className="space-y-1 text-left">
+                  <label className="text-[11px] font-bold text-slate-600 ml-1">Seu E-mail:</label>
+                  <input
+                    type="email"
+                    value={activationEmail}
+                    onChange={(e) => setActivationEmail(e.target.value)}
+                    placeholder="seuemail@exemplo.com"
+                    required
+                    className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-pink-500 focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-1 text-left">
+                  <label className="text-[11px] font-bold text-slate-600 ml-1">Chave de Ativação:</label>
+                  <input
+                    type="text"
+                    value={activationInput}
+                    onChange={(e) => setActivationInput(e.target.value)}
+                    placeholder="Ex: CASAL-VIP"
+                    required
+                    className="w-full text-center px-4 py-3 rounded-xl border border-slate-300 text-sm font-bold uppercase tracking-wider focus:ring-2 focus:ring-pink-500 focus:outline-none"
+                  />
+                </div>
+
+                {activationError && (
+                  <p className="text-xs font-semibold text-rose-600 bg-rose-50 p-2.5 rounded-lg border border-rose-200 leading-snug text-left">
+                    ❌ {activationError}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-xl shadow-md transition-all active:scale-95 text-xs uppercase tracking-wider mt-1"
+                >
+                  🔓 Liberar Acesso no Meu Celular
+                </button>
+              </form>
+
+              <div className="pt-4 border-t border-slate-100 text-[11px] text-slate-500 space-y-1">
+                <p>Ainda não comprou sua licença individual?</p>
+                <a
+                  href="https://wa.me/5511940817534?text=Ol%C3%A1!%20Gostaria%20de%20adquirir%20minha%20licen%C3%A7a%20do%20App%20Linguagem%20de%20Casal."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-600 font-bold hover:underline inline-block"
+                >
+                  Adquirir Licença pelo WhatsApp →
+                </a>
+              </div>
+            </div>
+          </div>
+        );
+      }
 
       return (
         <div className="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden text-slate-800 pb-20 sm:pb-24">
